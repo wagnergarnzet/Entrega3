@@ -5,12 +5,12 @@ namespace Fiap2025.Entrega3.Domain.Interfaces
 {
     public interface IContatoRepository
     {
-        Task AddContatoAsync(Contato contact);
+        Task AddContatoAsync(Contato contato);
         Task<Contato> GetContatoByIdAsync(Guid id);
         Task<Contato> GetContatoByDDDAsync(string DDD);
         Task<IEnumerable<Contato>> GetAllContatosAsync();
-        Task UpdateContatoAsync(Contato contact);
-        Task DeleteContatoAsync(Contato contact);
+        Task UpdateContatoAsync(Contato contato);
+        Task DeleteContatoAsync(Contato contato);
 
     }
 }
