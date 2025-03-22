@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using Fiap2025.Entrega3.Domain.Entities;
 using Fiap2025.Entrega3.Domain.Interfaces;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 
@@ -12,12 +15,13 @@ namespace Fiap2025.Entrega3.Infrastructure.Repositories
 {
     public class ContatoRepository : IContatoRepository
     {
-
         private readonly RabbitMQConnection _rabbitMQConnection;
+        private readonly string _connectionString;
 
-        public ContatoRepository(RabbitMQConnection rabbitMQConnection)
+        public ContatoRepository(RabbitMQConnection rabbitMQConnection, IConfiguration configuration)
         {
             _rabbitMQConnection = rabbitMQConnection;
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         }
 
         private async Task postar_mensagem(string fila, Contato contact)
@@ -51,19 +55,31 @@ namespace Fiap2025.Entrega3.Infrastructure.Repositories
             await postar_mensagem(fila, contact);
         }
 
-        public Task<IEnumerable<Contato>> GetAllContatosAsync()
+        public async Task<IEnumerable<Contato>> GetAllContatosAsync()
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = "select Id,Name,AreaCode,Phone,Email  from [dbo].[Contatos]";
+                return await connection.QueryAsync<Contato>(query);
+            }
         }
 
-        public Task<Contato> GetContatoByDDDAsync(string DDD)
+        public async Task<IEnumerable<Contato>> GetContatoByDDDAsync(string DDD)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return await connection.QueryAsync<Contato>(
+                    "SELECT  Id,Name,AreaCode,Phone,Email FROM Contatos WHERE DDD = @DDD", new { DDD });
+            }
         }
 
-        public Task<Contato> GetContatoByIdAsync(Guid id)
+        public async Task<Contato?> GetContatoByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var query = "SELECT Id,Name,AreaCode,Phone,Email FROM Contatos WHERE Id = @Id";
+                return await connection.QueryFirstOrDefaultAsync<Contato>(query, new { Id = id });
+            }
         }
 
         public async Task UpdateContatoAsync(Contato contact)

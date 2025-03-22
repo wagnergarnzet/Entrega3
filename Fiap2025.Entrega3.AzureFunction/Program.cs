@@ -1,13 +1,16 @@
-using Microsoft.Azure.Functions.Worker.Builder;
+using Fiap2025.Entrega3.Domain.Interfaces;
+using Fiap2025.Entrega3.Infrastructure.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var builder = FunctionsApplication.CreateBuilder(args);
+var host = new HostBuilder()
+    .ConfigureFunctionsWebApplication()
+    .ConfigureServices((context, services) =>
+    {
+        services.AddScoped<IContatoRepository, ContatoRepository>();
 
-builder.ConfigureFunctionsWebApplication();
+        // Add other services and configurations here
+    })
+    .Build();
 
-// Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
-// builder.Services
-//     .AddApplicationInsightsTelemetryWorkerService()
-//     .ConfigureFunctionsApplicationInsights();
-
-builder.Build().Run();
+host.Run();

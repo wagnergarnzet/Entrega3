@@ -18,7 +18,10 @@ namespace Fiap2025.Entrega3.Application.Handlers
         {
             var contato = await _repository.GetContatoByIdAsync(request.Id);
 
-            await _repository.DeleteContatoAsync(contato);
+            if (contato != null)
+            {
+                await _repository.DeleteContatoAsync(contato);
+            }
         }
     }
 }

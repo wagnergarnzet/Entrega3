@@ -8,8 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddSingleton(sp => new RabbitMQConnection("localhost", "guest", "guest"));
+
+
+var configuration = builder.Configuration;
+var rabbitMQHost = configuration["RabbitMQ:HostName"] ?? throw new ArgumentNullException("RabbitMQ Host");
+var rabbitMQUsername = configuration["RabbitMQ:UserName"] ?? throw new ArgumentNullException("RabbitMQ Username");
+var rabbitMQPassword = configuration["RabbitMQ:Password"] ?? throw new ArgumentNullException("RabbitMQ Password");
+
+
+builder.Services.AddSingleton(sp => new RabbitMQConnection(rabbitMQHost, rabbitMQUsername, rabbitMQPassword));
 builder.Services.AddScoped<IContatoRepository, ContatoRepository>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddContatoHandler).Assembly)); ;
