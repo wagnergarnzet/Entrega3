@@ -16,8 +16,26 @@ var rabbitMQUsername = configuration["RabbitMQ:UserName"] ?? throw new ArgumentN
 var rabbitMQPassword = configuration["RabbitMQ:Password"] ?? throw new ArgumentNullException("RabbitMQ Password");
 
 
-builder.Services.AddSingleton(sp => new RabbitMQConnection(rabbitMQHost, rabbitMQUsername, rabbitMQPassword));
-builder.Services.AddScoped<IContatoRepository, ContatoRepository>();
+builder.Services.AddSingleton<RabbitMQConnection>(provider =>
+{
+    var hostname = rabbitMQHost;
+    var username = rabbitMQUsername;
+    var password = rabbitMQPassword;
+    return new RabbitMQConnection(hostname, username, password);
+});
+
+
+var connectionString = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
+
+
+var serviceProvider = builder.Services.BuildServiceProvider();
+var rabbitMQConnection = serviceProvider.GetRequiredService<RabbitMQConnection>();
+
+builder.Services.AddSingleton<IContatoRepository>(provider => new ContatoRepository(rabbitMQConnection, connectionString));
+
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddContatoHandler).Assembly)); ;
 

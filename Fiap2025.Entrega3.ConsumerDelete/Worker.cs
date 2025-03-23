@@ -4,7 +4,7 @@ using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
-namespace Fiap2025.Entrega3.Consumer
+namespace Fiap2025.Entrega3.ConsumerDelete
 {
     public class Worker : BackgroundService
     {
@@ -35,7 +35,7 @@ namespace Fiap2025.Entrega3.Consumer
                 using var channel = await connection.CreateChannelAsync();
                 {
                     await channel.QueueDeclareAsync(
-                                         queue: "add_contato",
+                                         queue: "delete_contato",
                                          durable: false,
                                          exclusive: false,
                                          autoDelete: false,
@@ -54,25 +54,25 @@ namespace Fiap2025.Entrega3.Consumer
                             using (var scope = _serviceProvider.CreateScope())
                             {
                                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                                dbContext.Contatos.Add(contato);
+                                dbContext.Contatos.Remove(contato);
                                 await dbContext.SaveChangesAsync();
                             }
 
                             if (_logger.IsEnabled(LogLevel.Information))
                             {
-                                _logger.LogInformation("Contato Adicionado com sucesso {0}", message);
+                                _logger.LogInformation("Contato excluido com sucesso {0}", message);
                             }
 
                         };
 
                         await channel.BasicConsumeAsync(
-                                                         queue: "add_contato",
+                                                         queue: "delete_contato",
                                                          autoAck: true,
                                                          consumer: consumer);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Erro ao adicionar contato");
+                        _logger.LogError(ex, "Erro ao excluir contato");
                     }
                 };
                 await Task.CompletedTask;

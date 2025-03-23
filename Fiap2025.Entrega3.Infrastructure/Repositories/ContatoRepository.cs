@@ -18,6 +18,7 @@ namespace Fiap2025.Entrega3.Infrastructure.Repositories
         private readonly RabbitMQConnection _rabbitMQConnection;
         private readonly string _connectionString;
 
+
         public ContatoRepository(RabbitMQConnection rabbitMQConnection, IConfiguration configuration)
         {
             _rabbitMQConnection = rabbitMQConnection;
@@ -69,7 +70,7 @@ namespace Fiap2025.Entrega3.Infrastructure.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 return await connection.QueryAsync<Contato>(
-                    "SELECT  Id,Name,AreaCode,Phone,Email FROM Contatos WHERE DDD = @DDD", new { DDD });
+                    "SELECT  Id,Name,AreaCode,Phone,Email FROM Contatos WHERE AreaCode = @DDD", new { DDD });
             }
         }
 

@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Functions.Worker;
+using System.Security.Cryptography.Xml;
 
 namespace Fiap2025.Entrega3.AzureFunction
 {
@@ -18,8 +19,14 @@ namespace Fiap2025.Entrega3.AzureFunction
             _contatoRepository = contatoRepository;
         }
 
-        [FunctionName("GetContatoById")]
-        public async Task<IActionResult> Run(
+        [Function("heathcheck")]
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        {
+            return new OkObjectResult("Funcionando!");
+        }
+
+        [Function("GetContatoById")]
+        public async Task<IActionResult> GetContatoById(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "contato/{id}")] HttpRequest req,
             ILogger log, Guid id)
         {
@@ -31,7 +38,7 @@ namespace Fiap2025.Entrega3.AzureFunction
             return new OkObjectResult(contato);
         }
 
-        [FunctionName("GetContatosByDDD")]
+        [Function("GetContatosByDDD")]
         public async Task<IActionResult> GetContatosByDDD(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "contato/ddd/{ddd}")] HttpRequest req,
             ILogger log, string ddd)
@@ -40,7 +47,7 @@ namespace Fiap2025.Entrega3.AzureFunction
             return new OkObjectResult(contatos);
         }
 
-        [FunctionName("GetAllContatos")]
+        [Function("GetAllContatos")]
         public async Task<IActionResult> GetAllContatos(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "contato")] HttpRequest req,
             ILogger log)

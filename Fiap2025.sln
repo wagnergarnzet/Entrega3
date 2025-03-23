@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap2025.Entrega3.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap2025.Entrega3.AzureFunction", "Fiap2025.Entrega3.AzureFunction\Fiap2025.Entrega3.AzureFunction.csproj", "{E0ADE07D-6A56-41C7-BDCD-6AF257D5FD5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap2025.Entrega3.Consumer", "Fiap2025.Entrega3.Consumer\Fiap2025.Entrega3.Consumer.csproj", "{E16C9C1A-C42F-4B04-BB42-EC8943A5DDEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiap2025.Entrega3.Consumer", "Fiap2025.Entrega3.Consumer\Fiap2025.Entrega3.Consumer.csproj", "{E16C9C1A-C42F-4B04-BB42-EC8943A5DDEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap2025.Entrega3.ConsumerDelete", "Fiap2025.Entrega3.ConsumerDelete\Fiap2025.Entrega3.ConsumerDelete.csproj", "{5625AF56-72A9-4EC4-90C0-0C7A3B8673CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{E16C9C1A-C42F-4B04-BB42-EC8943A5DDEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E16C9C1A-C42F-4B04-BB42-EC8943A5DDEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E16C9C1A-C42F-4B04-BB42-EC8943A5DDEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5625AF56-72A9-4EC4-90C0-0C7A3B8673CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5625AF56-72A9-4EC4-90C0-0C7A3B8673CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5625AF56-72A9-4EC4-90C0-0C7A3B8673CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5625AF56-72A9-4EC4-90C0-0C7A3B8673CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
