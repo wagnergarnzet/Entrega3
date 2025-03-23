@@ -5,14 +5,14 @@ using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 builder.Services.AddSingleton<RabbitMQConnection>(provider =>
 {
-    var hostname = "localhost";
+    var hostname = "20.242.177.148";
     var username = "guest";
     var password = "guest";
     return new RabbitMQConnection(hostname, username, password);
@@ -24,16 +24,10 @@ var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-var rabbitMQConnection = builder.Services.BuildServiceProvider().GetService<RabbitMQConnection>();
+var rabbitMQConnection = builder.Services.BuildServiceProvider().GetService<RabbitMQConnection>() ?? throw new ArgumentNullException("rabbitMQConnection");
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddSingleton<IContatoRepository>(provider => new ContatoRepository(rabbitMQConnection, configuration));
-                    
-
-// Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
-// builder.Services
-//     .AddApplicationInsightsTelemetryWorkerService()
-//     .ConfigureFunctionsApplicationInsights();
 
 builder.Build().Run();

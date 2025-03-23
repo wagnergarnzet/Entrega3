@@ -11,7 +11,7 @@ namespace Fiap2025.Entrega3.Infrastructure
 
         public RabbitMQConnection(string hostname, string username, string password)
         {
-            var factory = new ConnectionFactory() { HostName = hostname, UserName = username, Password = password };
+            var factory = new ConnectionFactory() { HostName = hostname, UserName = username, Password = password, Port = 5672 };
             _connectionTask = factory.CreateConnectionAsync();
         }
 

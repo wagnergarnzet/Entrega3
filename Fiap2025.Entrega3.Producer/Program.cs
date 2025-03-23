@@ -3,6 +3,7 @@ using Fiap2025.Entrega3.Domain.Interfaces;
 using Fiap2025.Entrega3.Infrastructure;
 using Fiap2025.Entrega3.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,6 @@ var connectionString = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
     .Build();
-
 
 var serviceProvider = builder.Services.BuildServiceProvider();
 var rabbitMQConnection = serviceProvider.GetRequiredService<RabbitMQConnection>();

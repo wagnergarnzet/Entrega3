@@ -19,11 +19,6 @@ namespace Fiap2025.Entrega3.AzureFunction
             _contatoRepository = contatoRepository;
         }
 
-        [Function("heathcheck")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
-        {
-            return new OkObjectResult("Funcionando!");
-        }
 
         [Function("GetContatoById")]
         public async Task<IActionResult> GetContatoById(

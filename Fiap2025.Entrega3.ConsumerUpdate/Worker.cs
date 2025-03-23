@@ -27,6 +27,7 @@ namespace Fiap2025.Entrega3.ConsumerUpdate
                 var factory = new ConnectionFactory()
                 {
                     HostName = _configuration["RabbitMQ:HostName"] ?? throw new ArgumentNullException("RabbitMQ:HostName"),
+                    Port = 5672,
                     UserName = _configuration["RabbitMQ:UserName"] ?? throw new ArgumentNullException("RabbitMQ:UserName"),
                     Password = _configuration["RabbitMQ:Password"] ?? throw new ArgumentNullException("RabbitMQ:Password")
                 };
