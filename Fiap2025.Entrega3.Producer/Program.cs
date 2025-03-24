@@ -57,6 +57,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Console.WriteLine("Starting application");
+Console.WriteLine("Inicio");
 
 app.Run();
