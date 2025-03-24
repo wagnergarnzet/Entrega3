@@ -61,4 +61,4 @@ jobs:
         with:
           app-name: 'Fiap2025ConsumerUpdate'
           slot-name: 'Production'
-          package: ./publish
+          package: .
