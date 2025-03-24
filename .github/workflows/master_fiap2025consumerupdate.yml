@@ -62,3 +62,4 @@ jobs:
           app-name: 'Fiap2025ConsumerUpdate'
           slot-name: 'Production'
           package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9C47408CC00E4A2989D0399301B93F5A }}
