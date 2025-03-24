@@ -57,4 +57,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine("Starting application");
+
 app.Run();
