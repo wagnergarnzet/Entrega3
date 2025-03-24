@@ -1,58 +1,42 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - Fiap2025Consumer
+name: Deploy APIs to Azure
 
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:
+      - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
+
+    strategy:
+      matrix:
+        app-name: [consumer, consumerdelete, consumerupdate]
+        app-path: [Fiap2025.Entrega3.Consumer, Fiap2025.Entrega3.ConsumerDelete, Fiap2025.Entrega3.ConsumerUpdate]
+        azure-webapp-name: "${{ secrets.AZURE_WEBAPP_NAME_CONSUMER }},${{ secrets.AZURE_WEBAPP_NAME_CONSUMERDELETE }},${{ secrets.AZURE_WEBAPP_NAME_CONSUMERUPDATE }}"
+        azure-publish-profile: "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CONSUMER }}, ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CONSUMERDELETE }}, ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CONSUMERUPDATE }}"
 
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.x'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+    - name: Restore dependencies
+      run: dotnet restore ${{ matrix.app-path }}
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+    - name: Build
+      run: dotnet build ${{ matrix.app-path }} --configuration Release --no-restore
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+    - name: Publish
+      run: dotnet publish ${{ matrix.app-path }} --configuration Release --output ./publish --no-build
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: .net-app
-      
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'Fiap2025Consumer'
-          slot-name: 'Production'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_349700F1E409452494FDA09637E84070 }}
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ matrix.azure-webapp-name }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_349700F1E409452494FDA09637E84070 }}
+        package: ./publish
