@@ -11,10 +11,10 @@ jobs:
 
     strategy:
       matrix:
-        app-name: [consumer, consumerdelete, consumerupdate, producer]
-        app-path: [Fiap2025.Entrega3.Consumer, Fiap2025.Entrega3.ConsumerDelete, Fiap2025.Entrega3.ConsumerUpdate, Fiap2025.Entrega3.Producer]
-        azure-webapp-name: "${{ secrets.AZURE_WEBAPP_NAME_CONSUMER }}, ${{ secrets.AZURE_WEBAPP_NAME_CONSUMERDELETE }}, ${{ secrets.AZURE_WEBAPP_NAME_CONSUMERUPDATE }}, ${{ secrets.AZURE_WEBAPP_NAME_PRODUCER }}"
-        azure-publish-profile: "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CONSUMER }}, ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CONSUMERDELETE }}, ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CONSUMERUPDATE }}, ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRODUCER }}"
+        app-name: [consumer]
+        app-path: [Fiap2025.Entrega3.Consumer]
+        azure-webapp-name: "${{ secrets.AZURE_WEBAPP_NAME_CONSUMER }}"
+        azure-publish-profile: "${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CONSUMER }}"
 
     steps:
     - name: Checkout code
