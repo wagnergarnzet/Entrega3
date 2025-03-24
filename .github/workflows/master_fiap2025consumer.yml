@@ -38,5 +38,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ matrix.azure-webapp-name }}
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_349700F1E409452494FDA09637E84070 }}
+        publish-profile: ${{ matrix.azure-publish-profile }}
         package: ./publish
