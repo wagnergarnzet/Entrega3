@@ -57,6 +57,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Console.WriteLine("Inicio");
+Console.WriteLine("Inicio do projeto");
 
 app.Run();
