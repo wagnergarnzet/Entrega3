@@ -26,13 +26,7 @@ var configuration = new ConfigurationBuilder()
 
 var rabbitMQConnection = builder.Services.BuildServiceProvider().GetService<RabbitMQConnection>() ?? throw new ArgumentNullException("rabbitMQConnection");
 
-var connectionString = configuration["DefaultConnection"];
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new InvalidOperationException("Connection String incorreta");
-}
-
+var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddSingleton<IContatoRepository>(provider => new ContatoRepository(rabbitMQConnection, configuration));
 
