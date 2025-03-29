@@ -6,12 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
-
-// Configuração do RabbitMQConnection
-builder.Services.AddSingleton(provider =>
+builder.Services.AddSingleton<RabbitMQConnection>(provider =>
 {
     var hostname = "20.242.177.148";
     var username = "guest";
@@ -19,28 +18,22 @@ builder.Services.AddSingleton(provider =>
     return new RabbitMQConnection(hostname, username, password);
 });
 
-// Configuração do IConfiguration
-builder.Services.AddSingleton<IConfiguration>(provider =>
+
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
+
+var rabbitMQConnection = builder.Services.BuildServiceProvider().GetService<RabbitMQConnection>() ?? throw new ArgumentNullException("rabbitMQConnection");
+
+var connectionString = configuration["DefaultConnection"];
+
+if (string.IsNullOrEmpty(connectionString))
 {
-    return new ConfigurationBuilder()
-        .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-        .AddEnvironmentVariables()
-        .Build();
-});
+    throw new InvalidOperationException("Connection String incorreta");
+}
 
-// Configuração do IContatoRepository
-builder.Services.AddSingleton<IContatoRepository>(provider =>
-{
-    var configuration = provider.GetRequiredService<IConfiguration>();
-    var rabbitMQConnection = provider.GetRequiredService<RabbitMQConnection>();
 
-    var connectionString = configuration["DefaultConnection"];
-    if (string.IsNullOrEmpty(connectionString))
-    {
-        throw new InvalidOperationException("Connection String incorreta");
-    }
-
-    return new ContatoRepository(rabbitMQConnection, configuration);
-});
+builder.Services.AddSingleton<IContatoRepository>(provider => new ContatoRepository(rabbitMQConnection, configuration));
 
 builder.Build().Run();
